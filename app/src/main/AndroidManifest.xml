@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTextRecognitionApp">
         <activity
+            android:name=".StreamImageProcessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SingleImageProcessActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

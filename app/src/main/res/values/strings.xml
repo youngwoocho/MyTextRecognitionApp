@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyTextRecognitionApp</string>
+    <string name="button_single_image">이미지 한 장 인식 데모</string>
+    <string name="button_stream_image">이미지 스트림 데모</string>
 </resources>
