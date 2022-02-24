@@ -8,9 +8,6 @@ import androidx.camera.core.CameraXConfig
 class MyCameraApplication : Application(), CameraXConfig.Provider {
 
     override fun getCameraXConfig(): CameraXConfig {
-        return CameraXConfig.Builder.fromConfig(Camera2Config.defaultConfig())
-            .setAvailableCamerasLimiter(
-                CameraSelector.DEFAULT_BACK_CAMERA
-            ).build()
+        return Camera2Config.defaultConfig()
     }
 }

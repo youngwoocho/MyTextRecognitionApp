@@ -12,7 +12,7 @@ class SingleImageProcessActivity : AppCompatActivity() {
 
         viewBinding = ActivitySingleImageProcessBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-        
+
         supportActionBar?.title = TITLE_ACTIVITY
     }
 
