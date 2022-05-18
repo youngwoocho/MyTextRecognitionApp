@@ -14,7 +14,7 @@ Two main libraries used in this app are:
 ## Demo Video
 
 <figure class="video_container">
-  <video controls="true" allowfullscreen="true">
+  <video controls="true" allowfullscreen="true" poster="media/Logo_DiaVision_Blue.png">
       <source src="media/20220518_text_recognition.mp4" type="video/mp4">
   </video>
 </figure>
