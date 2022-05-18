@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -17,16 +18,11 @@ import java.util.concurrent.Executors
 class CameraTextScanManager(
     private val activity: AppCompatActivity,
     private val viewFinder: PreviewView,
-    private val listenerV1: OnV1TextRecognizeListener,
-    private val listenerV2: OnV2TextRecognizeListener
+    private val textRecognitionResultListener: OnTextRecognizeResultListener,
 ) {
     private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
-    fun interface OnV1TextRecognizeListener {
-        fun onTextRecognizeResult(textRecognitionResult: String)
-    }
-
-    fun interface OnV2TextRecognizeListener {
+    fun interface OnTextRecognizeResultListener {
         fun onTextRecognizeResult(textRecognitionResult: String)
     }
 
@@ -77,14 +73,18 @@ class CameraTextScanManager(
                         .build()
 
                 val preview = getPreview()
-
-                preview.setSurfaceProvider(viewFinder.surfaceProvider)
+                val textRecognizer = getTextRecognizer()
 
                 try {
                     // Unbind all use cases before rebinding
                     cameraProvider.unbindAll()
 
-                    cameraProvider.bindToLifecycle(activity, cameraSelector, preview)
+                    cameraProvider.bindToLifecycle(
+                        activity,
+                        cameraSelector,
+                        preview,
+                        textRecognizer
+                    )
 
                 } catch (exc: IllegalStateException) {
                     LogUtils.d("Binding already bound or not in main thread $exc")
@@ -103,9 +103,23 @@ class CameraTextScanManager(
 
     private fun getPreview(): Preview {
         return Preview.Builder()
-            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
             .setTargetRotation(viewFinder.display.rotation)
             .build()
+            .also { preview ->
+                preview.setSurfaceProvider(viewFinder.surfaceProvider)
+            }
+    }
+
+    private fun getTextRecognizer(): ImageAnalysis {
+        return ImageAnalysis.Builder()
+            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            .setTargetRotation(viewFinder.display.rotation)
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also { analysis ->
+                analysis.setAnalyzer(cameraExecutor, TextRecognizer(textRecognitionResultListener))
+            }
     }
 
     private fun allPermissionsGranted(): Boolean {
