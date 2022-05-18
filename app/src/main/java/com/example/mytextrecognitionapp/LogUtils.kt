@@ -8,10 +8,11 @@ class LogUtils {
         private const val DEFAULT_TAG = "TextRecognitionApp"
 
         fun d(tag: String, message: String?, throwable: Throwable? = null) {
-           if (BuildConfig.DEBUG) {
-               Log.d(tag, message, throwable)
-           }
+            if (BuildConfig.DEBUG) {
+                Log.d(tag, message, throwable)
+            }
         }
+
         fun d(message: String?, throwable: Throwable? = null) {
             d(DEFAULT_TAG, message, throwable)
         }
